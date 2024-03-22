@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import styles from './SearchBar.module.css'; 
+import toast from 'react-hot-toast';
+import styles from './SearchBar.module.css';
 
 export default function SearchBar({ onSubmit }) {
     const [query, setQuery] = useState('');
@@ -7,7 +8,7 @@ export default function SearchBar({ onSubmit }) {
     const handleSubmit = (event) => {
         event.preventDefault();
         if (query.trim() === '') {
-            alert('Please enter a search query.');
+            toast.error('Please enter a search query.');
             return;
         }
         onSubmit(query);
@@ -18,7 +19,7 @@ export default function SearchBar({ onSubmit }) {
     };
 
     return (
-        <header className={styles.header}> 
+        <header className={styles.header}>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -27,7 +28,7 @@ export default function SearchBar({ onSubmit }) {
                     placeholder="Search images and photos"
                     value={query}
                     onChange={handleChange}
-                    className={styles.input} 
+                    className={styles.input}
                 />
                 <button type="submit" className={styles.searchButton}>Search</button>
             </form>

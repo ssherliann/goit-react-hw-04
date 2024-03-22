@@ -1,5 +1,6 @@
 import Modal from 'react-modal';
 import styles from "../ImageModal/ImageModal.module.css";
+import { useModal } from '../../App';
 
 const customStyles = {
     content: {
@@ -15,7 +16,8 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 
-export default function ImageModal({ isOpen, onClose, photo }) {
+export default function ImageModal({ photo }) {
+    const { modalIsOpen, selectedPhoto, closeModal } = useModal();
     const { urls, description, likes, created_at } = photo;
     
     const formattedDate = new Date(created_at).toLocaleDateString('en-US', {
@@ -25,14 +27,14 @@ export default function ImageModal({ isOpen, onClose, photo }) {
     });
 
     return (
-        <Modal isOpen={isOpen} onRequestClose={onClose} style={customStyles}>
+        <Modal isOpen={modalIsOpen && selectedPhoto === photo} onRequestClose={closeModal} style={customStyles}>
             <div>
-                <img src={urls.regular} className={styles.modalImage}/>
+                <img src={urls.regular} className={styles.modalImage} alt={description}/>
                 <p>{description}</p>
                 <p>Likes: {likes}</p>
-                <p>Created at: {formattedDate}</p> 
+                <p>Created at: {formattedDate}</p>
             </div>
         </Modal>
-    );
+      );
 }
 
