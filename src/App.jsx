@@ -1,18 +1,11 @@
-import './App.css';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useState, createContext, useContext } from 'react';
 import SearchBar from './components/SearchBar/SearchBar';
 import ImageGallery from './components/ImageGallery/ImageGallery';
 import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
-import Loader from './components/Loader/Loader'; 
-import ImageModal from './components/ImageModal/ImageModal'; 
-
-const ModalContext = createContext();
-
-export const useModal = () => {
-    return useContext(ModalContext);
-};
+import Loader from './components/Loader/Loader';
+import ImageModal from './components/ImageModal/ImageModal';
 
 function App() {
     const [photos, setPhotos] = useState([]);
@@ -40,6 +33,21 @@ function App() {
         }
     };
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const newPhotos = await fetchPhotos(query, page);
+                setPhotos(prevPhotos => [...prevPhotos, ...newPhotos]);
+            } catch (error) {
+                setError(error);
+            }
+        };
+
+        if (query !== '') {
+            fetchData();
+        }
+    }, [query, page]);
+
     const openModal = (photo) => {
         setSelectedPhoto(photo);
         setModalIsOpen(true);
@@ -49,41 +57,26 @@ function App() {
         setModalIsOpen(false);
     };
 
-    const handleSubmit = async (searchQuery) => {
-        try {
-            const newPhotos = await fetchPhotos(searchQuery, 1);
-            setPhotos(newPhotos);
-            setPage(1);
-            setQuery(searchQuery);
-            setError(null);
-        } catch (error) {
-            setError(error);
-        }
+    const handleSubmit = (searchQuery) => {
+        setQuery(searchQuery);
+        setPage(1);
+        setError(null);
+        setPhotos([]);
     };
 
-    const handleLoadMore = async () => {
-        try {
-            const nextPage = page + 1;
-            const newPhotos = await fetchPhotos(query, nextPage);
-            setPhotos(prevPhotos => [...prevPhotos, ...newPhotos]);
-            setPage(nextPage);
-            setError(null);
-        } catch (error) {
-            setError(error);
-        }
+    const handleLoadMore = () => {
+        setPage(prevPage => prevPage + 1);
     };
 
     return (
-        <ModalContext.Provider value={{ modalIsOpen, selectedPhoto, openModal, closeModal }}>
         <>
             <SearchBar onSubmit={handleSubmit} />
-            {error ? <ErrorMessage error={error} /> : <ImageGallery photos={photos} openModal={openModal} />} 
-            {loading && <Loader />} 
+            {error ? <ErrorMessage error={error} /> : <ImageGallery photos={photos} openModal={openModal} />}
+            {loading && <Loader />}
             {photos.length > 0 && !error && <LoadMoreBtn onClick={handleLoadMore} />}
-            {modalIsOpen && selectedPhoto && <ImageModal photo={selectedPhoto} />}
+            {modalIsOpen && selectedPhoto && <ImageModal photo={selectedPhoto} closeModal={closeModal} modalIsOpen={modalIsOpen} />}
         </>
-        </ModalContext.Provider>
-    );  
+    );
 }
 
 export default App;

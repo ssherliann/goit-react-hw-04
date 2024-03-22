@@ -1,6 +1,5 @@
 import Modal from 'react-modal';
-import styles from "../ImageModal/ImageModal.module.css";
-import { useModal } from '../../App';
+import styles from './ImageModal.module.css';
 
 const customStyles = {
     content: {
@@ -9,32 +8,31 @@ const customStyles = {
         right: 'auto',
         bottom: 'auto',
         marginRight: '-50%',
-        transform: 'translate(-50%, -10%)', 
-        maxHeight: '90vh', 
+        transform: 'translate(-50%, -10%)',
+        maxHeight: '90vh',
     },
 };
 
 Modal.setAppElement('#root');
 
-export default function ImageModal({ photo }) {
-    const { modalIsOpen, selectedPhoto, closeModal } = useModal();
+export default function ImageModal({ photo, closeModal, modalIsOpen }) {
     const { urls, description, likes, created_at } = photo;
-    
+
     const formattedDate = new Date(created_at).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
     });
 
     return (
-        <Modal isOpen={modalIsOpen && selectedPhoto === photo} onRequestClose={closeModal} style={customStyles}>
+        <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles}>
             <div>
-                <img src={urls.regular} className={styles.modalImage} alt={description}/>
+                <img src={urls.regular} className={styles.modalImage} alt={description} />
                 <p>{description}</p>
                 <p>Likes: {likes}</p>
                 <p>Created at: {formattedDate}</p>
             </div>
         </Modal>
-      );
+    );
 }
 

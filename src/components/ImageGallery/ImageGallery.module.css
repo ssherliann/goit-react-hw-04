@@ -4,14 +4,14 @@
 }
 
 .gallery {
-    margin: 0 auto;
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     margin-top: 70px;
+    margin-left: 160px;
     padding: 0; 
-    max-width: 1200px; 
+    max-width: 100%; 
 }
 
 .gallery li {

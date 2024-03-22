@@ -1,21 +1,14 @@
 import styles from "../ImageGallery/ImageGallery.module.css";
 import ImageCard from "../ImageCard/ImageCard";
-import { useModal } from "../../App";
 
-export default function ImageGallery({ photos }) {
-    const { openModal } = useModal();
-
+export default function ImageGallery({ photos, openModal }) {
     return (
-        <div className={styles.galleryContainer}> 
+        <div className={styles.galleryContainer}>
             <ul className={styles.gallery}>
-            {photos.map((photo, index) => (
-                <li key={index}>
-                <ImageCard photo={photo} onImageClick={() => openModal(photo)} />
-                </li>
+            {photos.map(photo => (
+                <ImageCard key={photo.id} photo={photo} openModal={openModal} />
             ))}
             </ul>
         </div>
     );
 }
-
-

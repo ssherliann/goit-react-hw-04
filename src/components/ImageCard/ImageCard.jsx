@@ -1,15 +1,12 @@
 import styles from './ImageCard.module.css';
 
-export default function ImageCard({ photo, onImageClick }) {
-    const urls = photo ? photo.urls : null;
+export default function ImageCard({ photo, openModal }) {
+    const { urls } = photo;
 
     return (
-        <div>
-            <div onClick={() => onImageClick(urls.small)}>
-                {urls && <img className={styles.image} src={urls.small} alt="" />}
-            </div>
+        <div className={styles.imageCard}>
+            <img src={urls.small} alt="" className={styles.image} onClick={() => openModal(photo)}/>
         </div>
     );
 }
-
 
